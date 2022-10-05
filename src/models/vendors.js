@@ -49,18 +49,25 @@ const vendorSchema = new mongoose.Schema({
     },
     address: {
         addressName: {
-            type: String,
-            required: true,
-            trim: true,
-            lowerCase: true
-        },
-        lat : {
-            type: String,
-            default: "0"
-        },
-        long : {
-            type: String,
-            default: "0"
+            fulladdress: {
+                type: String,
+                required: true,
+                trim: true
+            },
+            city: {
+                type: String,
+                required: true
+            }
+        },        
+        addressCoords: {
+            lat : {
+                type: String,
+                default: "0"
+            },
+            long : {
+                type: String,
+                default: "0"
+            }
         }
     },
     openOrClosedstatus: {

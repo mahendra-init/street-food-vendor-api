@@ -1,5 +1,7 @@
 const express = require('express')
+const sharp = require('sharp')
 const { authVendor } = require('../middleware/auth')
+const upload = require('../middleware/upload')
 const Vendor = require('../models/vendors')
 const router = new express.Router()
 
@@ -16,6 +18,23 @@ router.post('/admin/vendor-signup', async (req, res) => {
         res.status(400).send(e)
     }
     
+})
+
+router.post('/admin/vendor/upload/documents', authVendor, upload, async (req, res) => {
+    const buffer1 = await sharp(req.files.fssaiLicense[0].buffer).resize({ height: 250, width: 250}).png().toBuffer()
+    req.vendor.documents.fssaiLicense = buffer1
+    
+    const buffer2 = await sharp(req.files.hawkerLicense[0].buffer).resize({ height: 250, width: 250}).png().toBuffer()
+    req.vendor.documents.hawkerLicense = buffer2
+    
+    const buffer3 = await sharp(req.files.addressProof[0].buffer).resize({ height: 250, width: 250}).png().toBuffer()
+    req.vendor.documents.addressProof = buffer3
+    
+    await req.vendor.save()
+    res.status(200).send("upload successfull")
+
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
 })
 
 
